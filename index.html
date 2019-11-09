@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="styles.css" rel="stylesheet">
+  </head>
+  <body>
+    <h1>Welcome to Trivia Quiz</h1>
+    <div id="container">
+        
+    
+        <select id="dropdown">
+          <option value="select">Select Level</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+        <p id="count"></p>
+        <p id='question'>Select difficulty level and click the start button to begin</p>
+        <p id="feedback"></p>
+          <div id="answerContainer">
+            <ul id="list"></ul>
+          </div>
+        
+        <button class="nav" id="start" hidden="true">Start</button>
+        <button class="nav" id="next" hidden="true">Next</button>
+        <button class="nav" id="play_again" hidden="true">Play Again</button>
+        <button class="nav" id="quit" hidden="true">Quit</button>
+    </div>
+    
+    <!-- <script type="module" src="getData.js"></script> -->
+    <script type='module' src="index.js"></script>
+    
+  </body>
+</html>
