@@ -25,7 +25,7 @@ const getData = (difficulty) => {
     request.onload = () => {
         let resObject = JSON.parse(request.response)
         data = resObject.results 
-        myState(state = 'gotData')          
+        myState(state = 'loadQuestion')          
     }
     
         
@@ -42,7 +42,7 @@ const getQuestion = (array, num) => {
 const ShowPlayerScore = () => {
     document.getElementById('question').innerText = ''
     document.getElementById('count').innerText = ''
-    document.getElementById('feedback').textContent = `Quiz ended: You answered ${currentScore} out of ${count} correctly!`
+    document.getElementById('finalScore').textContent = `Quiz ended: You answered ${currentScore} out of ${count} correctly!`
 }
 
 // load answers into array and return array
@@ -59,18 +59,29 @@ const ShowPlayerScore = () => {
 
  // render possible answers in DOM
  const renderAnswers = (array) => {
+    let x=0
     array.forEach(function (element) {
         
         let listEl = document.getElementById('list')
         let itemEl = document.createElement('li')
         let buttonEl = document.createElement('button')
         buttonEl.setAttribute('class', 'answer')
-
+        buttonEl.setAttribute('id', 'answer'+ x)
+        x++
         listEl.appendChild(itemEl)
         itemEl.append(buttonEl)
-        buttonEl.textContent = element   
+        buttonEl.textContent = element 
+        answerEventListener(buttonEl)  
     })
  }
+
+ // add event listeners to answers
+ const answerEventListener = (element) => {
+    element.addEventListener('click', (e) => {
+        answerSelected =  e.target.textContent
+        myState(state = 'submitAnswer')
+    })
+}
 
  // remove answers
  const removeAnswers = () => {
@@ -85,6 +96,10 @@ const ShowPlayerScore = () => {
  // remove feedback
  const removeFeedback = () => {
     document.getElementById('feedback').textContent = ''
+ }
+ // remove final score
+ const removeFinalScore = () => {
+    document.getElementById('finalScore').textContent = ''
  }
 
  // shuffle array
@@ -112,9 +127,13 @@ const ShowPlayerScore = () => {
 // give user feedback if answer correct or not
 const giveUserFeedback = (correct) => {
     if (correct === false) {
-        document.getElementById('feedback').textContent = `Wrong! The correct answer is: ${data[count].correct_answer}`
+        let feedback  = document.getElementById('feedback')
+        feedback.textContent = `Wrong! The correct answer is: ${data[count].correct_answer}`
+        feedback.setAttribute('style', 'color: red;')
     } else {
-        document.getElementById('feedback').textContent = 'Correct!'
+        let feedback = document.getElementById('feedback')
+        feedback.textContent = 'Correct!'
+        feedback.setAttribute("style", "color:  rgb(111, 211, 86);");
     }
     
 }
@@ -147,21 +166,6 @@ document.querySelector('#dropdown').addEventListener('change', (e) => {
 document.querySelector('#start').addEventListener('click', (e) => {
     myState(state = 'requestData')
 })
-
-let answer = document.getElementsByClassName('answer')
-    for (let x=0; x<answer.length; x++) {
-        answer[x].addEventListener('click', (e) => {
-            answerSelected =  e.target.textContent
-            myState(state = 'submitAnswer')
-        })
-    }
-    
-
-// submit button pressed
-// document.querySelector('#submit').addEventListener('click', (e) => {
-//     myState(state = 'submitAnswer') 
-    
-// })
 
 // next button pressed
 document.querySelector('#next').addEventListener('click', (e) => {
@@ -205,10 +209,6 @@ const myState = (state) => {
             getData(diffLevel)    
         break
 
-        case 'gotData':
-            myState(state = 'loadQuestion')   
-        break
-
         case 'error':
 
         break
@@ -217,7 +217,6 @@ const myState = (state) => {
             getQuestion(data, count)
             renderAnswers(getAnswers(data, count)) 
             document.getElementById('start').hidden = true 
-           
             document.getElementById('next').hidden = true
             document.getElementById('quit').hidden = false
         break
@@ -236,21 +235,22 @@ const myState = (state) => {
         break
 
         case 'playAgain':
-            removeFeedback()
+            removeFinalScore()
             resetQuiz()
             myState(state = 'requestData')
+            document.getElementById('dropdown').hidden = false
             document.getElementById('play_again').hidden = true
         break
 
         case 'quit':
             removeAnswers()
             removeFeedback()
+            removeFinalScore()
             resetQuiz()
             document.getElementById('count').innerText = ''
             document.getElementById('question').innerText = 'Select difficulty level and click the start button to begin'
             document.getElementById('dropdown').value = 'select'
             document.getElementById('dropdown').disabled = false
-            document.getElementById('submit').hidden = true
             document.getElementById('next').hidden = true
             document.getElementById('play_again').hidden = true
             document.getElementById('quit').hidden = true
