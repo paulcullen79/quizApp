@@ -205,7 +205,7 @@ const myState = (state) => {
         break
     
         case 'requestData':
-            document.getElementById('dropdown').disabled = true
+            document.getElementById('dropdown').hidden = true
             getData(diffLevel)    
         break
 
@@ -238,7 +238,6 @@ const myState = (state) => {
             removeFinalScore()
             resetQuiz()
             myState(state = 'requestData')
-            document.getElementById('dropdown').hidden = false
             document.getElementById('play_again').hidden = true
         break
 
@@ -250,7 +249,7 @@ const myState = (state) => {
             document.getElementById('count').innerText = ''
             document.getElementById('question').innerText = 'Select difficulty level and click the start button to begin'
             document.getElementById('dropdown').value = 'select'
-            document.getElementById('dropdown').disabled = false
+            document.getElementById('dropdown').hidden = false
             document.getElementById('next').hidden = true
             document.getElementById('play_again').hidden = true
             document.getElementById('quit').hidden = true

@@ -25,6 +25,7 @@ h1 {
     margin-left: 10%;
     margin-right: 10%;
     padding-left: 50px;
+    padding-right: 50px;
     padding-top: 20px; 
     background-color: whitesmoke;
     min-height: 500px;
@@ -33,7 +34,7 @@ h1 {
     font-size: 1em;
     border: 2px;
     background-color: rgb(247, 246, 241);
-    color: rgb(99, 97, 97);
+    color: rgb(80, 80, 80);
     
 } 
 
@@ -44,7 +45,13 @@ p {
 #count {
     font-size: 1.6em;
     color:  rgb(80, 80, 80);
-    
+    text-align: center; 
+}
+select {  
+    text-align-last: center; 
+}
+#level {
+    text-align: center;
 }
 #question {
     font-size: 2em;
@@ -90,6 +97,7 @@ button.answer:active {
     font-size: 1.8em;
     color: rgb(111, 211, 86);
     margin-bottom: 30px;
+    margin-top: 20px;
     background-color: rgb(51, 51, 51);
     padding: 10px 20px 10px 20px;
     border-radius: 10px;
@@ -102,4 +110,80 @@ button.answer:active {
 li {
     list-style-type: none;
     margin-bottom: 10px;   
+}
+
+
+/* media queries */
+
+/* medium */
+@media screen and (max-width: 992px) {
+    #question {
+        font-size: 1.6em;
+    }
+    #count {
+        font-size: 1.6em;
+    }
+    #feedback {
+        font-size: 2em;
+    }
+    #finalScore {
+        font-size: 1.6em;
+    }
+}
+/* small */
+@media screen and (max-width: 768px) {
+    .container {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+    #question #count #feedback #finalScore {
+        font-size: 1.4em;;
+    }
+    /* #count {
+        font-size: 1.4em;
+    }
+    #feedback {
+        font-size: 1.8em;
+    }
+    #finalScore {
+        font-size: 1.4em;
+    } */
+    .answer {
+        font-size: 1em;
+        margin-top: 5px;
+        padding: 5px 10px 5px 10px;
+    }
+    .nav {
+        font-size: 1.6em;
+        padding: 5px 10px 5px 10px;
+    }
+}
+/* extra small */
+@media screen and (max-width: 576px) {
+    h1 {
+        font-size: 1.5em;
+    }
+    .container {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    #question {
+        font-size: 1.2em;;
+    }
+    #count {
+        font-size: 1.2em;
+    }
+    #dropdown {
+        font-size: 1em;
+
+    }
+    #feedback {
+        font-size: 1.6em;
+    }
+    #finalScore {
+        font-size: 1.2em;
+    }
+    .answer {
+        font-size: 0.8em;
+    }
 }
