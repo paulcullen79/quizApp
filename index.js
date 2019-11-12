@@ -20,7 +20,7 @@ let count = 0
 const getData = (difficulty) => {
     
     const request = new XMLHttpRequest;
-    request.open('GET', `https://opentdb.com/api.php?amount=5&difficulty=${difficulty}`, true)
+    request.open('GET', `https://opentdb.com/api.php?amount=10&difficulty=${difficulty}`, true)
     request.send()
     request.onload = () => {
         let resObject = JSON.parse(request.response)
