@@ -30,9 +30,9 @@ h1 {
     background-color: whitesmoke;
     min-height: 500px;
 }
-#dropdown {
+#dropdown, #categoryDD {
     font-size: 1em;
-    border: 2px;
+    border: 2px solid rgb(109, 109, 109);
     background-color: rgb(247, 246, 241);
     color: rgb(80, 80, 80);
     
@@ -50,8 +50,10 @@ p {
 select {  
     text-align-last: center; 
 }
-#level {
+#level, #category {
+    margin-top: 30px;
     text-align: center;
+    
 }
 #question {
     font-size: 2em;

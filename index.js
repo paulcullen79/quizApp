@@ -9,6 +9,7 @@ let data = []
 let currentScore = 0
 let answerSelected
 let diffLevel
+let category
 let count = 0
 // functions
 
@@ -17,10 +18,10 @@ let count = 0
 
 
 // get quiz data from API
-const getData = (difficulty) => {
+const getData = (categorySelected, difficulty) => {
     
     const request = new XMLHttpRequest;
-    request.open('GET', `https://opentdb.com/api.php?amount=10&difficulty=${difficulty}`, true)
+    request.open('GET', `https://opentdb.com/api.php?amount=10&category=${categorySelected}&difficulty=${difficulty}`)
     request.send()
     request.onload = () => {
         let resObject = JSON.parse(request.response)
@@ -31,10 +32,23 @@ const getData = (difficulty) => {
         
 }
  
+// filter questions for special characters
+const filterQuestionString = (string) => {
+    const specialChars = ['&quot;', '&#039;']
+    const replacementChars = ['"',"'"]
+    for (let x = 0; x < specialChars.length; x++) {
+        let regex = RegExp(specialChars[x], 'g')
+        string = (string.replace(regex, replacementChars[x]))
+    }
+    return string
+}
+
+
+
 
 // get new question
-const getQuestion = (array, num) => {  
-    document.getElementById('question').innerText = array[num]['question']
+const getQuestion = (array, num) => { 
+    document.getElementById('question').innerText = filterQuestionString(array[num]['question'])
     document.getElementById('count').innerText = `Question ${num+1}:`                
 } 
 
@@ -156,10 +170,14 @@ const resetQuiz = () => {
 
 
 // event listeners
+// select difficulty level
+document.querySelector('#categoryDD').addEventListener('change', (e) => { 
+    myState(state = 'categorySelect')
+})
 
 // select difficulty level
 document.querySelector('#dropdown').addEventListener('change', (e) => { 
-    myState(state = 'difficultySelected')
+    myState(state = 'difficultySelect')
 })
 
 // start button pressed
@@ -191,11 +209,17 @@ document.querySelector('#quit').addEventListener('click', (e) => {
 
 // finite state machine
 
-let state = ['difficultySelected', 'requestData', 'gotData', 'error', 'load Question', 'submitAnswer', 'quizEnded', 'playAgain', 'quit']
+let state = ['categorySelect', 'difficultySelect', 'requestData', 'gotData', 'error', 'load Question', 'submitAnswer', 'quizEnded', 'playAgain', 'quit']
 
 const myState = (state) => {
     switch (state) {
-        case 'difficultySelected':
+        case 'categorySelect':
+            category = document.querySelector('#categoryDD').value
+            if (category != 'select') {
+                myState(state = 'difficultySelect')
+            }
+        break
+        case 'difficultySelect':
             diffLevel = document.querySelector('#dropdown').value
             if (diffLevel != 'select') {
                 document.getElementById('start').hidden = false
@@ -206,7 +230,7 @@ const myState = (state) => {
     
         case 'requestData':
             document.getElementById('dropdown').hidden = true
-            getData(diffLevel)    
+            getData(category, diffLevel )    
         break
 
         case 'error':
