@@ -11,26 +11,38 @@ let answerSelected
 let diffLevel
 let category
 let count = 0
+let sessionToken
 // functions
 
-
-
-
+// get session token
+(function getSessionToken () {
+    const request = new XMLHttpRequest;
+    request.open('GET', 'https://opentdb.com/api_token.php?command=request')
+    request.send()
+    request.onload = () => {
+        let res = JSON.parse(request.response)
+        sessionToken = res.token
+        return sessionToken
+    }
+}) ()
 
 // get quiz data from API
-const getData = (categorySelected, difficulty) => {
-    
+const getData = (categorySelected, difficulty, token) => {
+    console.log(token)
     const request = new XMLHttpRequest;
-    request.open('GET', `https://opentdb.com/api.php?amount=10&category=${categorySelected}&difficulty=${difficulty}`)
+    request.open('GET', `https://opentdb.com/api.php?amount=10&token=${sessionToken}&category=${categorySelected}&difficulty=${difficulty}`)
     request.send()
     request.onload = () => {
         let resObject = JSON.parse(request.response)
         data = resObject.results 
+        console.log(resObject.response_code)
         myState(state = 'loadQuestion')          
     }
     
         
 }
+
+
  
 // filter questions for special characters
 const filterQuestionString = (string) => {
@@ -230,7 +242,7 @@ const myState = (state) => {
     
         case 'requestData':
             document.getElementById('dropdown').hidden = true
-            getData(category, diffLevel )    
+            getData(category, diffLevel, sessionToken)    
         break
 
         case 'error':
