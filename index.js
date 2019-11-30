@@ -1,10 +1,8 @@
 // call to trivia API and returns question to display
-//import getData from './getData'; 
-//const getData = require('./getData')
+
+import './data'
 
 // global variables
-// let start = false
-// let quit = false
 let data = []
 let currentScore = 0
 let answerSelected
@@ -12,38 +10,11 @@ let diffLevel
 let category
 let count = 0
 let sessionToken
+let apiResponseCode
+
+
 // functions
 
-// get session token
-(function getSessionToken () {
-    const request = new XMLHttpRequest;
-    request.open('GET', 'https://opentdb.com/api_token.php?command=request')
-    request.send()
-    request.onload = () => {
-        let res = JSON.parse(request.response)
-        sessionToken = res.token
-        return sessionToken
-    }
-}) ()
-
-// get quiz data from API
-const getData = (categorySelected, difficulty, token) => {
-    console.log(token)
-    const request = new XMLHttpRequest;
-    request.open('GET', `https://opentdb.com/api.php?amount=10&token=${sessionToken}&category=${categorySelected}&difficulty=${difficulty}`)
-    request.send()
-    request.onload = () => {
-        let resObject = JSON.parse(request.response)
-        data = resObject.results 
-        console.log(resObject.response_code)
-        myState(state = 'loadQuestion')          
-    }
-    
-        
-}
-
-
- 
 // filter questions for special characters
 const filterQuestionString = (string) => {
     const specialChars = ['&quot;', '&#039;']
@@ -180,6 +151,12 @@ const resetQuiz = () => {
     currentScore = 0
 }
 
+// error hide buttons
+const errorButtonsHide = () => {
+    document.getElementById('start').hidden = true 
+    document.getElementById('next').hidden = true
+    document.getElementById('quit').hidden = false
+}
 
 // event listeners
 // select difficulty level
@@ -246,15 +223,32 @@ const myState = (state) => {
         break
 
         case 'error':
-
+            document.getElementById('count').innerText = ('Error:')
+            const errorMessages = ['No data available', 'Bad request parameter', 'Session token does not exist', 'No more questions available']
+            switch (apiResponseCode) {
+                case 1:  
+                document.getElementById('question').innerText = (errorMessages[0])            
+                errorButtonsHide()
+                break;
+                case 2:  
+                document.getElementById('question').innerText = (errorMessages[1])            
+                errorButtonsHide()
+                break;
+                case 3:  
+                document.getElementById('question').innerText = (errorMessages[2])            
+                errorButtonsHide()
+                break
+                case 4:  
+                document.getElementById('question').innerText = (errorMessages[3])            
+                errorButtonsHide()
+                break
+            }
         break
     
         case 'loadQuestion':
             getQuestion(data, count)
             renderAnswers(getAnswers(data, count)) 
-            document.getElementById('start').hidden = true 
-            document.getElementById('next').hidden = true
-            document.getElementById('quit').hidden = false
+            errorButtonsHide()
         break
 
         case 'submitAnswer':
