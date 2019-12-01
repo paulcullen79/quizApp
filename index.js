@@ -1,16 +1,21 @@
 // call to trivia API and returns question to display
 
-import './data'
+import { getData, getSessionToken } from "./data.js"
+
 
 // global variables
-let data = []
 let currentScore = 0
 let answerSelected
 let diffLevel
 let category
 let count = 0
-let sessionToken
-let apiResponseCode
+
+
+
+// request session token
+let sessionToken = getSessionToken()
+
+
 
 
 // functions
@@ -152,7 +157,7 @@ const resetQuiz = () => {
 }
 
 // error hide buttons
-const errorButtonsHide = () => {
+const hideButtons = () => {
     document.getElementById('start').hidden = true 
     document.getElementById('next').hidden = true
     document.getElementById('quit').hidden = false
@@ -219,36 +224,29 @@ const myState = (state) => {
     
         case 'requestData':
             document.getElementById('dropdown').hidden = true
-            getData(category, diffLevel, sessionToken)    
+            let p = new Promise((resolve, reject) => {
+                data = getData(category, diffLevel, sessionToken)
+                if (data != []) {
+                    resolve(data)
+                } else {
+                    reject('Error: Cannot get data')
+                }
+                
+            })
+            p.then(myState(state = 'loadQuestion')).catch(myState(state = 'error'))
+              
         break
 
         case 'error':
             document.getElementById('count').innerText = ('Error:')
-            const errorMessages = ['No data available', 'Bad request parameter', 'Session token does not exist', 'No more questions available']
-            switch (apiResponseCode) {
-                case 1:  
-                document.getElementById('question').innerText = (errorMessages[0])            
-                errorButtonsHide()
-                break;
-                case 2:  
-                document.getElementById('question').innerText = (errorMessages[1])            
-                errorButtonsHide()
-                break;
-                case 3:  
-                document.getElementById('question').innerText = (errorMessages[2])            
-                errorButtonsHide()
-                break
-                case 4:  
-                document.getElementById('question').innerText = (errorMessages[3])            
-                errorButtonsHide()
-                break
-            }
+            document.getElementById('question').innerText = ('No data available')            
+            hideButtons()
         break
     
         case 'loadQuestion':
             getQuestion(data, count)
             renderAnswers(getAnswers(data, count)) 
-            errorButtonsHide()
+            hideButtons()
         break
 
         case 'submitAnswer':
